@@ -1,0 +1,78 @@
+data:
+  battery_id_column: battery_id
+  cycle_column: cycle_number
+  capacity_column: capacity_ah
+  column_overrides: {}
+
+battery:
+  reference_capacity_method: first_n_average  # first_cycle | first_n_average | rated
+  reference_cycles: 5
+  rated_capacity: null
+  eol_soh: 0.80
+  high_temperature_threshold: 40.0
+
+features:
+  lag_cycles: [1, 2, 3, 5, 10]
+  rolling_windows: [3, 5, 10, 20, 50]
+  slope_windows: [5, 10, 20, 50]
+  min_history_cycles: 20
+
+forecasting:
+  horizons: [1, 5, 10, 25, 50, 100]
+  recursive_exogenous_strategy: carry_last  # carry_last | rolling_mean | omit
+  apply_constraints: true
+  capacity_upper_factor: 1.05
+  soh_min: 0.0
+  soh_max: 1.05
+
+validation:
+  train_fraction: 0.70
+  validation_fraction: 0.15
+  test_fraction: 0.15
+  time_series_splits: 5
+  mode: within_battery  # within_battery | cross_battery
+
+models:
+  last_value: true
+  historical_linear: true
+  linear_regression: true
+  polynomial_regression: true
+  polynomial_degrees: [2, 3]
+  ridge: true
+  lasso: true
+  elastic_net: true
+  random_forest: true
+  extra_trees: true
+  gradient_boosting: true
+  xgboost: false
+  ensemble: true
+  stacking: true
+
+tuning:
+  enabled: true
+  n_iter: 15
+  cv_splits: 3
+
+uncertainty:
+  enabled: true
+  lower_percentile: 5
+  upper_percentile: 95
+
+dashboard:
+  default_forecast_cycles: 100
+  max_forecast_cycles: 500
+  default_smoothing_window: 5
+  show_uncertainty: true
+
+knee:
+  smoothing_window: 15
+  slope_window: 20
+  acceleration_threshold: 1.5e-5
+  persistence_cycles: 10
+
+random_seed: 42
+paths:
+  models_dir: models
+  figures_dir: outputs/figures
+  predictions_dir: outputs/predictions
+  reports_dir: outputs/reports
