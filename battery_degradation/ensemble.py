@@ -85,5 +85,5 @@ def build_stacking_ensemble(base_estimators: list[tuple[str, Any]], seed: int = 
             [("scaler", StandardScaler()), ("model", RidgeCV(alphas=np.logspace(-3, 2, 20)))]
         ),
         passthrough=False,
-        n_jobs=-1,
+        n_jobs=1,
     )

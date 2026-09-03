@@ -115,16 +115,18 @@ def build_candidate_models(config: dict[str, Any], horizon: int, seed: int = 42)
                 family="trend",
             )
         )
-    if mcfg.get("polynomial_regression", True):
-        for deg in mcfg.get("polynomial_degrees", [2, 3]):
+    if mcfg.get("polynomial_regression", False):
+        # Only apply polynomial expansion to a small numeric subset when enabled —
+        # degree 2–3 on the full ~100-col feature matrix is prohibitively expensive.
+        for deg in mcfg.get("polynomial_degrees", [2]):
             specs.append(
                 ModelSpec(
                     f"PolynomialDeg{deg}",
                     Pipeline(
                         [
-                            ("poly", PolynomialFeatures(degree=int(deg), include_bias=False)),
+                            ("poly", PolynomialFeatures(degree=int(deg), include_bias=False, interaction_only=(int(deg) >= 3))),
                             ("scaler", StandardScaler()),
-                            ("model", LinearRegression()),
+                            ("model", Ridge(alpha=1.0, random_state=seed)),
                         ]
                     ),
                     family="trend",
@@ -169,13 +171,13 @@ def build_candidate_models(config: dict[str, Any], horizon: int, seed: int = 42)
             ModelSpec(
                 "RandomForest",
                 RandomForestRegressor(
-                    n_estimators=200,
-                    max_depth=15,
+                    n_estimators=80,
+                    max_depth=12,
                     min_samples_split=5,
                     min_samples_leaf=2,
                     max_features="sqrt",
                     random_state=seed,
-                    n_jobs=-1,
+                    n_jobs=1,
                 ),
                 supports_uncertainty=True,
                 family="ml",
@@ -186,13 +188,13 @@ def build_candidate_models(config: dict[str, Any], horizon: int, seed: int = 42)
             ModelSpec(
                 "ExtraTrees",
                 ExtraTreesRegressor(
-                    n_estimators=200,
-                    max_depth=15,
+                    n_estimators=80,
+                    max_depth=12,
                     min_samples_split=5,
                     min_samples_leaf=2,
                     max_features="sqrt",
                     random_state=seed,
-                    n_jobs=-1,
+                    n_jobs=1,
                 ),
                 supports_uncertainty=True,
                 family="ml",
@@ -205,7 +207,7 @@ def build_candidate_models(config: dict[str, Any], horizon: int, seed: int = 42)
                 HistGradientBoostingRegressor(
                     max_depth=6,
                     learning_rate=0.08,
-                    max_iter=200,
+                    max_iter=120,
                     random_state=seed,
                 ),
                 family="ml",

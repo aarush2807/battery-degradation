@@ -130,6 +130,7 @@ class BatteryPredictor:
             val_rmse: dict[str, float] = {}
 
             for spec in candidates:
+                logger.info("  Fitting %s (horizon %s)", spec.name, horizon)
                 model = clone(spec.estimator)
                 model = self._maybe_tune(spec.name, model, X_train, y_train)
                 model.fit(X_train, y_train)

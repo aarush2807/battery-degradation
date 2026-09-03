@@ -36,8 +36,9 @@ models:
   last_value: true
   historical_linear: true
   linear_regression: true
-  polynomial_regression: true
-  polynomial_degrees: [2, 3]
+  # Degree ≥3 on the full feature matrix is prohibitively slow; keep off by default.
+  polynomial_regression: false
+  polynomial_degrees: [2]
   ridge: true
   lasso: true
   elastic_net: true
@@ -46,7 +47,7 @@ models:
   gradient_boosting: true
   xgboost: false
   ensemble: true
-  stacking: true
+  stacking: false
 
 tuning:
   enabled: false  # set true for deeper search (slower)
