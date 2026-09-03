@@ -42,3 +42,9 @@ data/processed/*
 *.log
 .idea/
 .vscode/
+# Allow demo model binaries under models/ (small linear/baseline estimators)
+!models/*.joblib
+!models/metadata.json
+!models/metrics.csv
+# Keep processed CSV regenerable via train; ignore large processed dumps by default
+# data/raw synthetic CSV is intentionally tracked for demos.

@@ -53,6 +53,7 @@ def test_pipeline_fit_forecast_save_load(tmp_path):
     cfg["paths"]["models_dir"] = str(tmp_path / "models")
     cfg["paths"]["figures_dir"] = str(tmp_path / "figures")
     cfg["paths"]["reports_dir"] = str(tmp_path / "reports")
+    cfg["paths"]["processed_dir"] = str(tmp_path / "processed")
 
     pred = BatteryPredictor(config=cfg)
     df = _small_multi_battery()
@@ -71,7 +72,7 @@ def test_pipeline_fit_forecast_save_load(tmp_path):
     assert len(fc2) == 10
 
 
-def test_single_battery_without_id():
+def test_single_battery_without_id(tmp_path):
     cfg = load_config()
     cfg["tuning"]["enabled"] = False
     cfg["forecasting"]["horizons"] = [1, 5]
@@ -90,6 +91,10 @@ def test_single_battery_without_id():
         "ensemble": False,
         "stacking": False,
     }
+    cfg["paths"]["models_dir"] = str(tmp_path / "models")
+    cfg["paths"]["figures_dir"] = str(tmp_path / "figures")
+    cfg["paths"]["reports_dir"] = str(tmp_path / "reports")
+    cfg["paths"]["processed_dir"] = str(tmp_path / "processed")
     rows = []
     for c in range(1, 100):
         rows.append({"cycle": c, "capacity": 4.0 - 0.002 * c, "temp": 25.0})
@@ -98,3 +103,4 @@ def test_single_battery_without_id():
     pred.fit(df)
     fc = pred.forecast(future_cycles=5)
     assert len(fc) == 5
+

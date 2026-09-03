@@ -650,10 +650,12 @@ class BatteryPredictor:
         }
         # Persist prepared data for dashboard convenience
         if self.prepared_ is not None:
-            processed = project_path("data", "processed")
+            processed_cfg = self.config.get("paths", {}).get("processed_dir", "data/processed")
+            processed = Path(processed_cfg) if Path(processed_cfg).is_absolute() else project_path(processed_cfg)
             ensure_dir(processed)
-            self.prepared_.to_csv(processed / "prepared_cycles.csv", index=False)
-            meta["prepared_path"] = str(processed / "prepared_cycles.csv")
+            prepared_path = processed / "prepared_cycles.csv"
+            self.prepared_.to_csv(prepared_path, index=False)
+            meta["prepared_path"] = str(prepared_path)
         with (models_dir / "metadata.json").open("w", encoding="utf-8") as f:
             json.dump(meta, f, indent=2, default=str)
         if self.metrics_df_ is not None:

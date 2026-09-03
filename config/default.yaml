@@ -77,3 +77,4 @@ paths:
   figures_dir: outputs/figures
   predictions_dir: outputs/predictions
   reports_dir: outputs/reports
+  processed_dir: data/processed
