@@ -1,0 +1,415 @@
+{
+  "feature_cols": [
+    "cycle_number",
+    "capacity_ah",
+    "temperature_mean",
+    "soh",
+    "cycle_number_squared",
+    "sqrt_cycle",
+    "log1p_cycle",
+    "capacity_lag_1",
+    "capacity_lag_2",
+    "capacity_lag_3",
+    "capacity_lag_5",
+    "capacity_lag_10",
+    "SOH_lag_1",
+    "SOH_lag_2",
+    "SOH_lag_3",
+    "SOH_lag_5",
+    "SOH_lag_10",
+    "capacity_rolling_mean_3",
+    "capacity_rolling_std_3",
+    "capacity_rolling_min_3",
+    "capacity_rolling_max_3",
+    "SOH_rolling_mean_3",
+    "SOH_rolling_std_3",
+    "capacity_rolling_mean_5",
+    "capacity_rolling_std_5",
+    "capacity_rolling_min_5",
+    "capacity_rolling_max_5",
+    "SOH_rolling_mean_5",
+    "SOH_rolling_std_5",
+    "capacity_rolling_mean_10",
+    "capacity_rolling_std_10",
+    "capacity_rolling_min_10",
+    "capacity_rolling_max_10",
+    "SOH_rolling_mean_10",
+    "SOH_rolling_std_10",
+    "capacity_rolling_mean_20",
+    "capacity_rolling_std_20",
+    "capacity_rolling_min_20",
+    "capacity_rolling_max_20",
+    "SOH_rolling_mean_20",
+    "SOH_rolling_std_20",
+    "capacity_rolling_mean_50",
+    "capacity_rolling_std_50",
+    "capacity_rolling_min_50",
+    "capacity_rolling_max_50",
+    "SOH_rolling_mean_50",
+    "SOH_rolling_std_50",
+    "capacity_slope_5",
+    "SOH_slope_5",
+    "capacity_slope_10",
+    "SOH_slope_10",
+    "capacity_slope_20",
+    "SOH_slope_20",
+    "capacity_slope_50",
+    "delta_capacity_1",
+    "delta_SOH_1",
+    "pct_degradation_capacity_1",
+    "delta_capacity_5",
+    "delta_SOH_5",
+    "pct_degradation_capacity_5",
+    "delta_capacity_10",
+    "delta_SOH_10",
+    "pct_degradation_capacity_10",
+    "degradation_velocity",
+    "degradation_acceleration",
+    "change_in_capacity_slope",
+    "temperature_lag_1",
+    "temperature_lag_5",
+    "temperature_rolling_mean_5",
+    "temperature_rolling_mean_10",
+    "cumulative_high_temperature_exposure"
+  ],
+  "model_names_by_horizon": {
+    "1": "HistoricalLinear",
+    "5": "HistoricalLinear"
+  },
+  "reference_capacities": {
+    "BATTERY_001": 3.9939999999999998
+  },
+  "schema_mapping": {
+    "cycle_number": "cycle",
+    "capacity_ah": "capacity",
+    "temperature_mean": "temp"
+  },
+  "eol_soh": 0.8,
+  "training_timestamp": "2026-09-03T23:09:04.629991+00:00",
+  "target_name": "capacity",
+  "ensemble_weights": {},
+  "feature_importances": {},
+  "config": {
+    "data": {
+      "battery_id_column": "battery_id",
+      "cycle_column": "cycle_number",
+      "capacity_column": "capacity_ah",
+      "column_overrides": {}
+    },
+    "battery": {
+      "reference_capacity_method": "first_n_average",
+      "reference_cycles": 5,
+      "rated_capacity": null,
+      "eol_soh": 0.8,
+      "high_temperature_threshold": 40.0
+    },
+    "features": {
+      "lag_cycles": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "rolling_windows": [
+        3,
+        5,
+        10,
+        20,
+        50
+      ],
+      "slope_windows": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "min_history_cycles": 20
+    },
+    "forecasting": {
+      "horizons": [
+        1,
+        5
+      ],
+      "recursive_exogenous_strategy": "carry_last",
+      "apply_constraints": true,
+      "capacity_upper_factor": 1.05,
+      "soh_min": 0.0,
+      "soh_max": 1.05
+    },
+    "validation": {
+      "train_fraction": 0.7,
+      "validation_fraction": 0.15,
+      "test_fraction": 0.15,
+      "time_series_splits": 5,
+      "mode": "within_battery"
+    },
+    "models": {
+      "last_value": true,
+      "historical_linear": true,
+      "linear_regression": true,
+      "polynomial_regression": false,
+      "ridge": false,
+      "lasso": false,
+      "elastic_net": false,
+      "random_forest": true,
+      "extra_trees": false,
+      "gradient_boosting": false,
+      "xgboost": false,
+      "ensemble": false,
+      "stacking": false
+    },
+    "tuning": {
+      "enabled": false,
+      "n_iter": 10,
+      "cv_splits": 3
+    },
+    "uncertainty": {
+      "enabled": true,
+      "lower_percentile": 5,
+      "upper_percentile": 95
+    },
+    "dashboard": {
+      "default_forecast_cycles": 100,
+      "max_forecast_cycles": 500,
+      "default_smoothing_window": 5,
+      "show_uncertainty": true
+    },
+    "knee": {
+      "smoothing_window": 15,
+      "slope_window": 20,
+      "acceleration_threshold": 1.5e-05,
+      "persistence_cycles": 10
+    },
+    "random_seed": 42,
+    "paths": {
+      "models_dir": "models",
+      "figures_dir": "outputs/figures",
+      "predictions_dir": "outputs/predictions",
+      "reports_dir": "outputs/reports"
+    }
+  },
+  "metrics_records": [
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1637617582842011e-14,
+      "smape": 1.1637617582842015e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 1,
+      "split": "test",
+      "rank": 1.0
+    },
+    {
+      "mae": 9.14910309409341e-07,
+      "rmse": 9.72999501134712e-07,
+      "r2": 0.9999999873206068,
+      "mape": 2.399533076877036e-05,
+      "smape": 2.399533402919419e-05,
+      "max_abs_error": 1.5057291733455713e-06,
+      "model": "LinearRegression",
+      "horizon": 1,
+      "split": "test",
+      "rank": 2.0
+    },
+    {
+      "mae": 0.001999999999999987,
+      "rmse": 0.0019999999999999875,
+      "r2": 0.9464285714285722,
+      "mape": 0.05241117020956729,
+      "smape": 0.05239743908368638,
+      "max_abs_error": 0.002000000000000224,
+      "model": "LastValue",
+      "horizon": 1,
+      "split": "test",
+      "rank": 3.0
+    },
+    {
+      "mae": 0.04796696428571489,
+      "rmse": 0.048739063690777996,
+      "r2": -30.814682983755045,
+      "mape": 1.2575151246624554,
+      "smape": 1.2493998351194795,
+      "max_abs_error": 0.0619669642857148,
+      "model": "RandomForest",
+      "horizon": 1,
+      "split": "test",
+      "rank": 4.0
+    },
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1637617582842011e-14,
+      "smape": 1.1637617582842015e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 1,
+      "split": "test_final",
+      "rank": 1.0
+    },
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1549835172034356e-14,
+      "smape": 1.1549835172034356e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 1,
+      "split": "validation",
+      "rank": 1.0
+    },
+    {
+      "mae": 1.9330923141578994e-07,
+      "rmse": 2.2254822890532308e-07,
+      "r2": 0.9999999992380352,
+      "mape": 5.033532525717907e-06,
+      "smape": 5.03353269386144e-06,
+      "max_abs_error": 3.9430276288499044e-07,
+      "model": "LinearRegression",
+      "horizon": 1,
+      "split": "validation",
+      "rank": 2.0
+    },
+    {
+      "mae": 0.0020000000000000018,
+      "rmse": 0.002000000000000002,
+      "r2": 0.9384615384615387,
+      "mape": 0.052015833376964624,
+      "smape": 0.052002308600419316,
+      "max_abs_error": 0.002000000000000224,
+      "model": "LastValue",
+      "horizon": 1,
+      "split": "validation",
+      "rank": 3.0
+    },
+    {
+      "mae": 0.01896696428571487,
+      "rmse": 0.02060936035435316,
+      "r2": -5.534549757162794,
+      "mape": 0.49373089419069366,
+      "smape": 0.4922946712509086,
+      "max_abs_error": 0.031966964285714994,
+      "model": "RandomForest",
+      "horizon": 1,
+      "split": "validation",
+      "rank": 4.0
+    },
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1637617582842011e-14,
+      "smape": 1.1637617582842015e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 5,
+      "split": "test",
+      "rank": 1.0
+    },
+    {
+      "mae": 1.0459420673569753e-06,
+      "rmse": 1.114476199063192e-06,
+      "r2": 0.9999999833653054,
+      "mape": 2.7432217280291728e-05,
+      "smape": 2.7432221558017735e-05,
+      "max_abs_error": 1.7370046498932368e-06,
+      "model": "LinearRegression",
+      "horizon": 5,
+      "split": "test",
+      "rank": 2.0
+    },
+    {
+      "mae": 0.009999999999999993,
+      "rmse": 0.009999999999999993,
+      "r2": -0.3392857142857102,
+      "mape": 0.2620558510478379,
+      "smape": 0.26171293226581716,
+      "max_abs_error": 0.010000000000000231,
+      "model": "LastValue",
+      "horizon": 5,
+      "split": "test",
+      "rank": 3.0
+    },
+    {
+      "mae": 0.04613072420635011,
+      "rmse": 0.04693304147899433,
+      "r2": -28.500585479495516,
+      "mape": 1.2093953789898464,
+      "smape": 1.2018682385331378,
+      "max_abs_error": 0.06013072420635002,
+      "model": "RandomForest",
+      "horizon": 5,
+      "split": "test",
+      "rank": 4.0
+    },
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1637617582842011e-14,
+      "smape": 1.1637617582842015e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 5,
+      "split": "test_final",
+      "rank": 1.0
+    },
+    {
+      "mae": 4.440892098500626e-16,
+      "rmse": 4.440892098500626e-16,
+      "r2": 1.0,
+      "mape": 1.1552832801509618e-14,
+      "smape": 1.1552832801509618e-14,
+      "max_abs_error": 4.440892098500626e-16,
+      "model": "HistoricalLinear",
+      "horizon": 5,
+      "split": "validation",
+      "rank": 1.0
+    },
+    {
+      "mae": 2.1482649085276998e-07,
+      "rmse": 2.497284523619683e-07,
+      "r2": 0.9999999988863518,
+      "mape": 5.595024272209885e-06,
+      "smape": 5.595024484005651e-06,
+      "max_abs_error": 4.4653793151994137e-07,
+      "model": "LinearRegression",
+      "horizon": 5,
+      "split": "validation",
+      "rank": 2.0
+    },
+    {
+      "mae": 0.010000000000000026,
+      "rmse": 0.010000000000000024,
+      "r2": -0.7857142857142918,
+      "mape": 0.2601466674997625,
+      "smape": 0.259808724351531,
+      "max_abs_error": 0.010000000000000231,
+      "model": "LastValue",
+      "horizon": 5,
+      "split": "validation",
+      "rank": 3.0
+    },
+    {
+      "mae": 0.018130724206350098,
+      "rmse": 0.01961436107159062,
+      "r2": -5.870056432977301,
+      "mape": 0.472043735072366,
+      "smape": 0.4707422935456952,
+      "max_abs_error": 0.030130724206350212,
+      "model": "RandomForest",
+      "horizon": 5,
+      "split": "validation",
+      "rank": 4.0
+    }
+  ],
+  "cycle_range": {
+    "min": 1.0,
+    "max": 99.0
+  },
+  "prepared_path": "/Users/aarushpathuri/CS_Projects/battery_degradation/data/processed/prepared_cycles.csv"
+}
