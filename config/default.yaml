@@ -49,8 +49,8 @@ models:
   stacking: true
 
 tuning:
-  enabled: true
-  n_iter: 15
+  enabled: false  # set true for deeper search (slower)
+  n_iter: 10
   cv_splits: 3
 
 uncertainty:

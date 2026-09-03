@@ -92,11 +92,11 @@ class SchemaMappingResult:
     errors: list[str] = field(default_factory=list)
 
     @property
-    has_capacity(self) -> bool:
+    def has_capacity(self) -> bool:
         return any(c in self.mapping for c in CAPACITY_CANDIDATES)
 
     @property
-    ok(self) -> bool:
+    def ok(self) -> bool:
         return not self.errors
 
 
