@@ -137,7 +137,17 @@ def render_sidebar() -> dict[str, Any]:
     )
 
     predictor = load_predictor_if_available()
+    # Always attach the in-memory prepared frame so forecast/KPIs work without
+    # relying solely on a possibly stale prepared_path in metadata.json.
+    if predictor is not None and prepared is not None:
+        predictor.prepared_ = prepared
+        predictor.reference_capacities_ = {
+            str(k): float(v) for k, v in (refs or {}).items()
+        }
     st.session_state.predictor = predictor
+
+    if raw_toggle:
+        st.sidebar.caption(f"Prepared shape: {prepared.shape[0]} × {prepared.shape[1]}")
 
     return {
         "prepared": prepared,

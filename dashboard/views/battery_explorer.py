@@ -20,7 +20,7 @@ import plotly.express as px
 def render(ctx: dict) -> None:
     st.header("Battery Explorer")
     prepared = ctx.get("prepared")
-    if prepared is None:
+    if prepared is None or (hasattr(prepared, "empty") and prepared.empty):
         st.error("No data loaded.")
         return
 
@@ -39,7 +39,10 @@ def render(ctx: dict) -> None:
     if len(batteries) == 1:
         data = data[(data["cycle_number"] >= c0) & (data["cycle_number"] <= c1)]
 
-    numeric_cols = [c for c in data.columns if c not in ("battery_id", "timestamp") and data[c].dtype != "O"]
+    if data.empty:
+        st.warning("No rows in the selected cycle range. Widen the cycle range in the sidebar.")
+        return
+
     y_var = st.selectbox(
         "Y variable",
         [
@@ -79,8 +82,9 @@ def render(ctx: dict) -> None:
 
     # Degradation rate for primary battery
     primary = data[data["battery_id"] == batteries[0]]
-    featured = build_features_for_battery(primary)
-    st.plotly_chart(plot_degradation_rate(featured), use_container_width=True)
+    if not primary.empty:
+        featured = build_features_for_battery(primary)
+        st.plotly_chart(plot_degradation_rate(featured), use_container_width=True)
 
     st.subheader("Battery summary table")
     summary = battery_summary_table(prepared[prepared["battery_id"].isin(batteries)])

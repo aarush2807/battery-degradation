@@ -130,14 +130,18 @@ python main.py dashboard
 ## Dashboard
 
 ```bash
+source .venv/bin/activate
 streamlit run dashboard/app.py
 # or
 python main.py dashboard
 ```
 
+**Important:** Use the **Navigation** radio in the left sidebar (Overview, Battery Explorer, …). Page modules live under `dashboard/views/` (not Streamlit’s special `pages/` folder) so the app is a single entrypoint with working charts.
+
 Pages: **Overview**, **Battery Explorer**, **Forecasting**, **Model Performance**, **Diagnostics**, **Data Quality**.
 
-Upload a CSV in the sidebar or rely on saved `models/` + `data/processed/prepared_cycles.csv` after training.
+Upload a CSV in the sidebar or rely on `data/raw/synthetic_battery_cycles.csv` plus saved `models/` after training. A green sidebar status line shows cycle/battery counts when data loaded successfully.
+
 
 ## Testing
 

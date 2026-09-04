@@ -21,8 +21,20 @@ def _base_layout(title: str, xlab: str, ylab: str) -> dict[str, Any]:
     )
 
 
-def plot_capacity_history(df: pd.DataFrame, color: str = "battery_id") -> go.Figure:
-    fig = px.line(df, x="cycle_number", y="capacity_ah", color=color if color in df.columns else None)
+def _color_arg(df: pd.DataFrame, color: Optional[str]) -> Optional[str]:
+    """Return a Plotly color column only when it exists; never pass bare None into `in` checks oddly."""
+    if color and color in df.columns:
+        return color
+    return None
+
+
+def plot_capacity_history(df: pd.DataFrame, color: Optional[str] = "battery_id") -> go.Figure:
+    if df is None or df.empty:
+        fig = go.Figure()
+        fig.update_layout(**_base_layout("Capacity vs Cycle", "Cycle", "Capacity (Ah)"))
+        fig.add_annotation(text="No data", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
+        return fig
+    fig = px.line(df, x="cycle_number", y="capacity_ah", color=_color_arg(df, color))
     fig.update_layout(**_base_layout("Capacity vs Cycle", "Cycle", "Capacity (Ah)"))
     return fig
 
@@ -31,11 +43,16 @@ def plot_soh_history(
     df: pd.DataFrame,
     eol_soh: float = 0.80,
     knee_cycle: Optional[float] = None,
-    color: str = "battery_id",
+    color: Optional[str] = "battery_id",
 ) -> go.Figure:
+    if df is None or df.empty or "soh" not in df.columns:
+        fig = go.Figure()
+        fig.update_layout(**_base_layout("SOH vs Cycle", "Cycle", "SOH (%)"))
+        fig.add_annotation(text="No data", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
+        return fig
     plot_df = df.copy()
     plot_df["soh_pct"] = plot_df["soh"] * 100
-    fig = px.line(plot_df, x="cycle_number", y="soh_pct", color=color if color in plot_df.columns else None)
+    fig = px.line(plot_df, x="cycle_number", y="soh_pct", color=_color_arg(plot_df, color))
     fig.add_hline(y=eol_soh * 100, line_dash="dot", line_color="#c0392b", annotation_text="EOL")
     if knee_cycle is not None:
         fig.add_vline(x=knee_cycle, line_dash="dash", line_color="#27ae60", annotation_text="Knee")
